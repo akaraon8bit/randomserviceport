@@ -13,10 +13,11 @@ import
 	"path/filepath"
 	"os"
 	"errors"
+	"strconv"
 )
 
 
-func GetRandomFreePort(portstring string) (string) {
+func GetRandomFreePort(portstring string) (int) {
 
   OpenPort :=	OpenPortAny(portstring)
 
@@ -40,8 +41,9 @@ host, port, _ := net.SplitHostPort(u.Host)
 
 
   }
+  x, _ := strconv.Atoi(port)
 
-  return  port
+  return  x
 
 }
 
