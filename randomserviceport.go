@@ -97,7 +97,7 @@ default:
 
 // save generated port
 
-func savePortToWorkDir(texts string, workSpace string, serviceName string, overWrite bool) (string, error) {
+func SavePortToWorkDir(texts string, workSpace string, serviceName string, overWrite bool) (string, error) {
 
 	usr, _ := user.Current()
 
