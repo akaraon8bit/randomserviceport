@@ -9,7 +9,12 @@ import
   "net/url"
   "net"
   "fmt"
+	"os/user"
+	"path/filepath"
+	"os"
+	"errors"
 )
+
 
 func GetRandomFreePort(portstring string) (string) {
 
@@ -86,4 +91,45 @@ default:
 
   return   connected
 
+}
+
+
+
+// save generated port
+
+func savePortToWorkDir(texts string, workSpace string, serviceName string, overWrite bool) (string, error) {
+
+	usr, _ := user.Current()
+
+	workDir := filepath.Join(usr.HomeDir, workSpace)
+	resultpath := filepath.Join(workDir, "port")
+		if _, err := os.Stat(resultpath); errors.Is(err, os.ErrNotExist) {
+			err := os.Mkdir(resultpath, os.ModePerm)
+			if err != nil {
+//				log.Println(err)
+			}
+		}
+
+	resultfilepath := filepath.Join(resultpath,  serviceName)
+
+
+	var tmpFile *os.File
+	if overWrite{
+		tmpFile, _ = os.OpenFile(resultfilepath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	}else{
+		tmpFile, _ = os.OpenFile(resultfilepath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	}
+
+
+	text := []byte(texts)
+	if _, err := tmpFile.Write(text); err != nil {
+		return "error", err
+	}
+
+	// Close the file
+	if err := tmpFile.Close(); err != nil {
+		return "error", err
+	}
+
+	return tmpFile.Name(), nil
 }
